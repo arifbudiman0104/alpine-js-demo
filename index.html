@@ -7,10 +7,128 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://unpkg.com/alpinejs" defer></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.1/axios.min.js"
+        integrity="sha512-zJYu9ICC+mWF3+dJ4QC34N9RA0OVS1XtPbnf6oXlvGrLGNB8egsEzu/5wgG90I61hOOKvcywoLzwNmPqGAdATA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <style>
+        [x-cloak] {
+            display: none;
+        }
+    </style>
+    <title>Alpine.js</title>
 </head>
 
-<body>
+<body class="bg-gray-800 text-gray-200 p-5">
+    <div class="container mx-auto mt-6 max-w-lg">
+        <h1 class="text-5xl mb-6">Alpine.js Demo</h1>
+
+        <!-- x-data-->
+        <div x-data="{
+            open: false,
+            name: 'Arif Budiman Arrosyid',
+            search:'',
+            posts:[
+                {title:'Post One'},
+                {title:'Post Two'},
+                {title:'Post Three'},
+                {title:'Post Four'},
+            ]
+            }">
+
+            <!-- x-on & x-bind-->
+            <button x-on:click="open = !open" x-bind:class="{ 'bg-gray-600': open, 'bg-orange-800': !open }"
+                class="px-4 py-2 rounded-lg">
+                Toggle
+            </button>
+
+            <!-- x-show -->
+            <div x-show="open" x-cloak x-transition>
+                <p class="bg-gray-600 p-4 my-6 rounded-lg">
+                    Lorem ipsum dolor, sit amet consectetur adipisicing elit. Numquam animi ab excepturi deserunt
+                    laborum repellendus dolores at cum dolor similique. Deserunt libero, consequatur ullam porro
+                    aspernatur sit. Obcaecati voluptas quaerat labore qui, cupiditate optio consectetur in totam sunt
+                    aspernatur nobis dicta porro alias incidunt placeat. Temporibus dolor sapiente deserunt eius!
+                </p>
+            </div>
+
+            <!-- x-text -->
+            <div class="my-4">
+                The value of name is <span x-text="name" class="font-bold"></span>
+            </div>
+
+            <!-- x-effect -->
+            <div x-effect="console.log(open)"></div>
+
+            <!-- x-model -->
+            <input type="text" x-model="search" class="bg-gray-600 px-4 py-4 w-full rounded-lg"
+                placeholder="Search something...">
+            <div class="my-4">
+                The value of search is <span x-text="search" class="font-bold"></span>
+            </div>
+
+            <!-- x-if -->
+            <div>
+                <template x-if="open">
+                    <div class="div bg-gray-600 p-4 mt-6 rounded-lg" ">
+                        Templte based on a condition
+                        Lorem ipsum, dolor sit amet consectetur adipisicing elit.
+                    </div>
+                </template>
+            </div>
+
+            <!-- x-for -->
+            <h3 class=" text-2xl my-6 font-bold">Posts</h3>
+                        <template x-for="post in posts" class="mb-6">
+                            <p x-text="post.title" class="mb-3"></p>
+                        </template>
+                        <button x-on:click=" posts.push({title: 'New Post' })"
+                            class="bg-blue-800 px-4 py-2 rounded-lg mb-6">
+                            Add Post
+                        </button>
+
+                        <!-- x-ref -->
+                        <div>
+                            <div x-ref="text" class="mb-6">Hello World</div>
+                            <button x-on:click="$refs.text.remove()" class="bg-orange-800 px-4 py-2 rounded-lg mb-6">
+                                Remove Text
+                            </button>
+                        </div>
+
+                        <!-- x-html -->
+                        <div x-html="(await axios.get('./partial.html')).data">...</div>
+
+                        <!-- $el -->
+                        <button x-on:click="$el.innerHTML = 'Hello World'"
+                            class="mt-4 px-4 py-2 bg-gray-600 rounded-lg">
+                            Replace Text
+                        </button>
+
+                        <!-- x-init & $watch-->
+                        <div x-init="$watch('posts', value => console.log(value))"></div>
+
+                        <!-- $dispatch -->
+                        <div @notify="alert('You have been notified!')">
+                            <button x-on:click="$dispatch('notify')"
+                                class="mt-4 px-4 py-2 bg-gray-600 rounded-lg">Notify</button>
+                        </div>
+
+                        <!-- $data -->
+                        <button x-on:click="getLatestPost($data.posts)" class="mt-4 px-4 py-2 bg-gray-600 rounded-lg">
+                            Get Latest Post
+                        </button>
+
+                    </div>
+            </div>
+            
+            <footer x-data="">
+                <p class="text-center text-gray-400 mt-6">Copyright &copy; <span x-text="new Date().getFullYear()"></span></p>
+            </footer>
+
+            <script>
+                function getLatestPost(posts) {
+                    console.log(posts.slice(-1).pop())
+                }
+            </script>
 
 </body>
 
